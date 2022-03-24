@@ -2,17 +2,22 @@ FROM node:14 as deps
 
 WORKDIR /calcom
 
-COPY calendso/package.calendso calendso/yarn.lock ./
-COPY calendso/apps/web/package.calendso calendso/apps/web/yarn.lock ./apps/web/
-COPY calendso/packages/prisma/package.calendso ./packages/prisma/package.calendso
-COPY calendso/packages/prisma/schema.prisma ./packages/prisma/schema.prisma
-COPY calendso/packages/lib/package.calendso ./packages/lib/package.calendso
-COPY calendso/packages/tsconfig/package.calendso ./packages/tsconfig/package.calendso
+COPY calendso/package.json calendso/yarn.lock ./
+COPY calendso/apps/web ./apps/web
+COPY calendso/packages ./packages
+# COPY calendso/apps/web/package.json calendso/apps/web/yarn.lock ./apps/web/
+# COPY calendso/packages/prisma/package.json ./packages/prisma/package.json
+# COPY calendso/packages/prisma/schema.prisma ./packages/prisma/schema.prisma
+# COPY calendso/packages/lib/package.json ./packages/lib/package.json
+# COPY calendso/packages/tsconfig/package.json ./packages/tsconfig/package.json
 
-COPY calendso/packages/config/package.calendso ./packages/config/package.calendso
-COPY calendso/packages/ee/package.calendso ./packages/ee/package.calendso
-COPY calendso/packages/ui/package.calendso ./packages/ui/package.calendso
-COPY calendso/packages/stripe/package.calendso ./packages/stripe/package.calendso
+# COPY calendso/packages/config/package.json ./packages/config/package.json
+# COPY calendso/packages/ee/package.json ./packages/ee/package.json
+# COPY calendso/packages/ui/package.json ./packages/ui/package.json
+# COPY calendso/packages/stripe/package.json ./packages/stripe/package.json
+# COPY calendso/packages/app-store/package.json ./packages/app-store/package.json
+# COPY calendso/packages/core/package.json ./packages/core/package.json
+# COPY calendso/packages/types/package.json ./packages/types/package.json
 
 # RUN yarn install --frozen-lockfile
 
@@ -32,7 +37,7 @@ ENV BASE_URL=$BASE_URL \
   NEXT_PUBLIC_LICENSE_CONSENT=$NEXT_PUBLIC_LICENSE_CONSENT \
   NEXT_PUBLIC_TELEMETRY_KEY=$NEXT_PUBLIC_TELEMETRY_KEY
 
-COPY calendso/package.calendso calendso/yarn.lock calendso/turbo.calendso ./
+COPY calendso/package.json calendso/yarn.lock calendso/turbo.json ./
 COPY calendso/apps/web ./apps/web
 COPY calendso/packages ./packages
 COPY --from=deps /calcom/node_modules ./node_modules
@@ -44,9 +49,9 @@ ENV NODE_ENV production
 RUN apt-get update && \
   apt-get -y install netcat && \
   rm -rf /var/lib/apt/lists/* && \
-  yarn global add prisma
+  yarn add prisma
 
-COPY calendso/package.calendso calendso/yarn.lock calendso/turbo.calendso ./
+COPY calendso/package.json calendso/yarn.lock calendso/turbo.json ./
 COPY --from=builder /calcom/node_modules ./node_modules
 COPY --from=builder /calcom/packages ./packages
 COPY --from=builder /calcom/apps/web/node_modules ./apps/web/node_modules
@@ -55,7 +60,7 @@ COPY --from=builder /calcom/apps/web/next.config.js ./apps/web/next.config.js
 COPY --from=builder /calcom/apps/web/next-i18next.config.js ./apps/web/next-i18next.config.js
 COPY --from=builder /calcom/apps/web/public ./apps/web/public
 COPY --from=builder /calcom/apps/web/.next ./apps/web/.next
-COPY --from=builder /calcom/apps/web/package.calendso ./apps/web/package.calendso
+COPY --from=builder /calcom/apps/web/package.json ./apps/web/package.json
 COPY  scripts scripts
 
 EXPOSE 3000
