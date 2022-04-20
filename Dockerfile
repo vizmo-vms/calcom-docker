@@ -43,6 +43,9 @@ ENV BASE_URL=$BASE_URL \
 COPY calendso/package.json calendso/yarn.lock calendso/turbo.json ./
 COPY calendso/apps/web ./apps/web
 COPY calendso/packages ./packages
+# copy email body logo to web folder
+COPY email_body_logo.png ./apps/web/public/emails/CalLogo@2x.png
+COPY favicon.ico ./apps/web/public/favicon.ico
 COPY --from=deps /calcom/node_modules ./node_modules
 RUN yarn build && yarn install --production --ignore-scripts --prefer-offline
 
