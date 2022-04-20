@@ -9,50 +9,52 @@ networks:
     external: false
 
 services:
-  database:
-    image: postgres
-    restart: always
-    volumes:
-      - database-data:/var/lib/postgresql/data/
-    env_file: .env
-    networks:
-      - stack
+  # database:
+  #   image: postgres
+  #   restart: always
+  #   volumes:
+  #     - database-data:/var/lib/postgresql/data/
+  #   env_file: .env
+  #   networks:
+  #     - stack
 
   calendso:
+    image: ghcr.io/vizmo-vms/calcom:latest
     build:
       context: .
       dockerfile: Dockerfile
       args:
         - BASE_URL=${BASE_URL}
         - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
+        - NEXT_PUBLIC_WEBAPP_URL=${NEXT_PUBLIC_WEBAPP_URL}
         - NEXT_PUBLIC_LICENSE_CONSENT=${NEXT_PUBLIC_LICENSE_CONSENT}
         - NEXT_PUBLIC_TELEMETRY_KEY=${NEXT_PUBLIC_TELEMETRY_KEY}
     restart: always
-    networks:
-      - stack
+    # networks:
+    #   - stack
     ports:
       - 3000:3000
     env_file: .env
-    environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}/${POSTGRES_DB}
-    depends_on:
-      - database
+    # environment:
+    #   - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}/${POSTGRES_DB}
+    # depends_on:
+    #   - database
 
-# Optional use of Prisma Studio. In production, comment out or remove the section below to prevent unwanted access to your database.
-  studio:
-    image: calendso/calendso:latest
-    restart: always
-    networks:
-      - stack
-    ports:
-      - 5555:5555
-    env_file: .env
-    environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}/${POSTGRES_DB}
-    depends_on:
-      - database
-    command:
-      - npx
-      - prisma
-      - studio
-# END SECTION: Optional use of Prisma Studio.
+    # Optional use of Prisma Studio. In production, comment out or remove the section below to prevent unwanted access to your database.
+    # studio:
+    #   image: calendso/calendso:latest
+    #   restart: always
+    #   networks:
+    #     - stack
+    #   ports:
+    #     - 5555:5555
+    #   env_file: .env
+    #   environment:
+    #     - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${DATABASE_HOST}/${POSTGRES_DB}
+    #   depends_on:
+    #     - database
+    #   command:
+    #     - npx
+    #     - prisma
+    #     - studio
+    # END SECTION: Optional use of Prisma Studio.

@@ -2,7 +2,7 @@ FROM node:14 as deps
 
 WORKDIR /calcom
 
-COPY calendso/package.json calendso/yarn.lock ./
+COPY calendso/package.json calendso/yarn.lock calendso/turbo.json ./
 COPY calendso/apps/web ./apps/web
 COPY calendso/packages ./packages
 # COPY calendso/apps/web/package.json calendso/apps/web/yarn.lock ./apps/web/
@@ -30,10 +30,13 @@ FROM node:14 as builder
 WORKDIR /calcom
 ARG BASE_URL
 ARG NEXT_PUBLIC_APP_URL
+ARG NEXT_PUBLIC_WEBAPP_URL
 ARG NEXT_PUBLIC_LICENSE_CONSENT
 ARG NEXT_PUBLIC_TELEMETRY_KEY
 ENV BASE_URL=$BASE_URL \
+  NEXT_PUBLIC_WEBAPP_URL=$NEXT_PUBLIC_WEBAPP_URL \
   NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL \
+  NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL \
   NEXT_PUBLIC_LICENSE_CONSENT=$NEXT_PUBLIC_LICENSE_CONSENT \
   NEXT_PUBLIC_TELEMETRY_KEY=$NEXT_PUBLIC_TELEMETRY_KEY
 
